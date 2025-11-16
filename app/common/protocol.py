@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 import json
 import time
-
 class Hello(BaseModel):
     type: str = "hello"
     certPem: str
