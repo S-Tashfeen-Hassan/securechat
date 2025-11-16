@@ -3,12 +3,10 @@ import json
 
 from app.common.protocol import Hello, json_en, json_de
 from app.crypto.aes import encrypt_ecb_b64, decrypt_ecb_b64
-
 def send_msg_sock(sock, objBytes: bytes):
     length = len(objBytes)
     hdr = struct.pack("!I", length)
     sock.sendall(hdr + objBytes)
-
 def recv_msg_sock(sock):
     hdr = b""
     while len(hdr) < 4:
