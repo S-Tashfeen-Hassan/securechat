@@ -2,7 +2,6 @@ from cryptography import x509
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 import datetime
-
 def load_pem_cert(path_bytes):
     if isinstance(path_bytes, (bytes, bytearray)):
         data = bytes(path_bytes)
