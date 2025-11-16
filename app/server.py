@@ -60,7 +60,7 @@ def chat_send_loop(conn, session_key: bytes, server_priv, send_state, own_cert_o
             line = input()
             if not line:
                 continue
-            if line.strip().lower() == "/quit":
+            if line.strip().lower() == "/byebye":
                 with send_state["lock"]:
                     send_state["quit"] = True
                 return
