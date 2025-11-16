@@ -17,7 +17,6 @@ from app.crypto.aes import encrypt_ecb_b64, decrypt_ecb_b64
 from app.storage.db import get_conn
 from app.storage.transcript import append_transcript_line, compute_transcript_hash_and_bounds, cert_fingerprint_hex
 from app.helper import send_msg_sock, recv_msg_sock
-
 from cryptography.hazmat.primitives.asymmetric import padding, utils
 from cryptography.hazmat.primitives import hashes
 
