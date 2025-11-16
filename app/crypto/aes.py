@@ -2,9 +2,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding as sym_padding
 from cryptography.hazmat.backends import default_backend
 import base64
-
 BLOCK_SIZE = 128
-
 def pkcs7_pad(data: bytes):
     padder = sym_padding.PKCS7(BLOCK_SIZE).padder()
     return padder.update(data) + padder.finalize()
