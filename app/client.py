@@ -113,7 +113,7 @@ def chat_send_loop(sock, session_key, client_priv, send_state, own_cert_obj):
             line = input()
             if not line:
                 continue
-            if line.strip() == "/byebye":
+            if line.strip() == "/quit":
                 with send_state["lock"]:
                     send_state["quit"] = True
                 return
