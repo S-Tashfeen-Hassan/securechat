@@ -9,7 +9,6 @@ from cryptography.hazmat.primitives import serialization
 def _canonical_json_bytes(obj: dict) -> bytes:
     return (json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
 
-
 def cert_fingerprint_hex(cert_obj):
     raw = cert_obj.public_bytes(serialization.Encoding.DER)
     return hashlib.sha256(raw).hexdigest()
