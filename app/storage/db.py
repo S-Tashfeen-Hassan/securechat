@@ -3,9 +3,7 @@ import os
 import pymysql
 import argparse
 from dotenv import load_dotenv
-
 load_dotenv()
-
 def get_conn():
     return pymysql.connect(
         host=os.getenv("DB_HOST"),
