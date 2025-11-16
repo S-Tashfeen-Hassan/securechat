@@ -19,6 +19,7 @@ from app.storage.transcript import append_transcript_line, compute_transcript_ha
 from app.helper import send_msg_sock, recv_msg_sock
 from cryptography.hazmat.primitives.asymmetric import padding, utils
 from cryptography.hazmat.primitives import hashes
+
 CA_CERT = os.getenv("CA_CERT", "certs/ca.cert.pem")
 SERVER_CERT = os.getenv("SERVER_CERT", "certs/server.cert.pem")
 SERVER_KEY = os.getenv("SERVER_KEY", "certs/server.key.pem")
