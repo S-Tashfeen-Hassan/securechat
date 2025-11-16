@@ -106,7 +106,6 @@ def do_session_dh(sock, server_pubkey):
     session_key = derive_shared_key(a_s, int(B_hex, 16))
 
     return session_key, client_priv
-
 def chat_send_loop(sock, session_key, client_priv, send_state, own_cert_obj):
     try:
         while True:

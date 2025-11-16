@@ -10,7 +10,6 @@ import threading
 import time
 import datetime
 import queue
-
 from app.common.protocol import Hello, json_en, json_de
 from app.crypto.pki import load_pem_cert, verify_certificates, load_pem_privkey, cert_pubkey
 from app.crypto.dh import gen_priv_key, pub_from_priv, derive_shared_key
