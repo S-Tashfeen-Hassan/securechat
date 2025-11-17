@@ -1,274 +1,167 @@
 # **SecureChat – Assignment #2 (Information Security – Fall 2025)**
 
-**Author:** Mesam E Tamaar
-**Roll Number:** 22i-1304
+**Author:** Tashfeen Hassan
+**Roll Number:** 22i-0860
 **Course:** Information Security
 
-SecureChat is a fully implemented, console-based encrypted messaging system demonstrating:
+# **SecureChat – Encrypted Messaging System**
 
-* **Confidentiality** — AES-128
-* **Integrity** — SHA-256
-* **Authenticity** — RSA signatures + X.509 certificates
-* **Replay protection** — sequence numbers + timestamps
-* **Tamper evidence** — append-only transcript logs
-* **Non-repudiation** — signed session receipts
-
-All security is implemented at the **application layer** over plain TCP (no TLS/SSL).
+SecureChat is an end-to-end encrypted communication system built using Python.
+It implements modern cryptographic techniques—including **AES**, **Diffie-Hellman key exchange**, and **PKI certificates**—to ensure confidentiality, integrity, and authentication across client–server communication.
 
 ---
 
-## **1. Project Overview**
+## 📌 **Features**
 
-SecureChat implements:
+### 🔐 End-to-End Encryption
 
-* Certificate-based authentication using a custom Root CA
-* A **two-stage Diffie–Hellman handshake**
+* AES symmetric encryption for message confidentiality.
+* Diffie-Hellman key exchange to derive shared session keys.
+* Public Key Infrastructure (PKI) for certificate-based identity verification.
 
-  * DH-1 for AES-encrypted login/register
-  * DH-2 with RSA signatures for secure chat sessions
-* AES-128 (ECB) with PKCS#7 padding
-* RSA PKCS#1 v1.5 signatures over SHA-256
-* Sequence numbers + timestamps to prevent replay
-* Canonical JSON transcript logs for audit and tamper detection
-* Signed SessionReceipts for non-repudiation
+### 🧾 Secure Message Handling
 
-The system consists of a Python client and server communicating using a custom encrypted protocol.
+* Encrypted message transmission between client and server.
+* Structured protocol for sending, receiving, and parsing packets.
+
+### 🗂️ Data Storage
+
+* Local transcript storage for delivered/received messages.
+* SQLite database backend (via `storage/db.py`) for persistent logging.
+
+### 🧰 Modular Architecture
+
+* `crypto/` for all cryptographic primitives.
+* `common/` for protocol and shared utilities.
+* `storage/` for transcripts and database logic.
+* `app/` for server and client implementations.
+
+### 🔏 Certificate Authority Included
+
+* Scripts for generating your own CA and certificates.
+* Pre-generated sample certificates in `certs/`.
 
 ---
 
-## **2. Folder Structure**
+## 📁 **Project Structure**
 
 ```
-securechat/
-├─ client.py
-├─ server.py
+securechat-main/
 │
-├─ app/
-│  ├─ common/
-│  │  └─ protocol.py
-│  │
-│  ├─ crypto/
-│  │  ├─ aes.py
-│  │  ├─ dh.py
-│  │  └─ pki.py
-│  │
-│  ├─ storage/
-│     ├─ db.py
-│     └─ transcript.py
+├── app/
+│   ├── client.py          # Client application
+│   ├── server.py          # Server application
+│   ├── helper.py          # Utility functions for networking
+│   ├── common/
+│   │   ├── protocol.py    # Message protocol definitions
+│   │   └── utils.py       # Common helpers
+│   ├── crypto/
+│   │   ├── aes.py         # AES encryption
+│   │   ├── dh.py          # Diffie-Hellman exchange
+│   │   └── pki.py         # PKI certificate handling
+│   └── storage/
+│       ├── db.py          # Database for logs/transcripts
+│       └── transcript.py  # Local transcript management
 │
-├─ scripts/
-│  ├─ gen_ca.py
-│  └─ gen_cert.py
+├── certs/                 # Certificates and keys
 │
-├─ certs/
-├─ transcripts/
-├─ client_receipts/
-├─ server_receipts/
+├── scripts/
+│   ├── gen_ca.py          # Generate Certificate Authority
+│   └── gen_cert.py        # Generate server/client certificates
 │
-├─ requirements.txt
-└─ README.md
+├── tests/
+│   └── manual/            # Manual testing notes
+│
+├── requirements.txt       # Python dependencies
+└── README.md              # (This file)
 ```
 
 ---
 
-## **3. Setup Instructions**
+## 🚀 **Getting Started**
 
-### **Install dependencies**
+### **1. Install Dependencies**
 
-```bash
+```
 pip install -r requirements.txt
 ```
 
-### **Start MySQL**
+### **2. Generate Certificates (optional)**
 
-Example using Docker:
+If you want new certificates:
 
-```bash
-docker run -d --name securechat-db \
-  -e MYSQL_ROOT_PASSWORD=rootpass \
-  -e MYSQL_DATABASE=securechat \
-  -e MYSQL_USER=scuser \
-  -e MYSQL_PASSWORD=scpass \
-  -p 3306:3306 mysql:8
+```
+python scripts/gen_ca.py
+python scripts/gen_cert.py server
+python scripts/gen_cert.py client
 ```
 
-### **Initialize users table**
-
-```bash
-python app/storage/db.py --init
-```
+This will create new private keys and signed certificates under `certs/`.
 
 ---
 
-## **4. PKI Certificate Setup**
+## ▶️ **Running the Server**
 
-### **Generate Root CA**
-
-```bash
-python scripts/gen_ca.py --name "FAST-NU Root CA"
+```
+python app/server.py
 ```
 
-### **Generate server certificate**
-
-```bash
-python scripts/gen_cert.py --cn server.local --out certs/server
-```
-
-### **Generate client certificate**
-
-```bash
-python scripts/gen_cert.py --cn client.local --out certs/client
-```
-
-This produces:
-
-* `certs/ca.cert.pem`
-* `certs/ca.key.pem`
-* `certs/server.cert.pem`
-* `certs/server.key.pem`
-* `certs/client.cert.pem`
-* `certs/client.key.pem`
+Server listens for incoming client connections, performs certificate authentication, negotiates session keys, and manages message routing.
 
 ---
 
-## **5. Running SecureChat**
-
-### **Start server**
-
-```bash
-python -m app.server
-```
-
-### **Start client**
-
-```bash
-python -m app.client
-```
-
-Client prompts:
+## 💬 **Running the Client**
 
 ```
-1) Register
-2) Login
+python app/client.py
 ```
 
-After login, the secure chat session begins.
+The client will:
+
+* Load its certificate.
+* Verify the server certificate.
+* Perform Diffie-Hellman key exchange.
+* Start sending and receiving encrypted messages.
 
 ---
 
-## **6. Security Features (Implemented)**
+## 🔒 **Security Overview**
 
-### **PKI Certificate Validation**
-
-Both client and server:
-
-* Validate CA signature
-* Check CN value
-* Check certificate validity period
-* Reject mismatched, expired, or self-signed certificates
-
----
-
-### **Two-Stage Diffie–Hellman**
-
-#### **DH #1 → login/register encryption**
-
-Used to derive AES-128 key for:
-
-* username
-* email
-* password
-
-Credentials are encrypted before transmission.
-
-#### **DH #2 → session establishment**
-
-Public DH values are **RSA-signed** by both parties to prevent MITM.
-Final session key is derived after signature verification.
+| Component             | Technique                                         |
+| --------------------- | ------------------------------------------------- |
+| Symmetric Encryption  | AES (CBC/CTR depending on implementation)         |
+| Key Exchange          | Diffie-Hellman                                    |
+| Identity Verification | X.509 Certificates (PKI)                          |
+| Message Integrity     | HMAC / AES authenticated mode (depending on code) |
+| Storage Protection    | Local transcripts + optional DB                   |
 
 ---
 
-### **Secure Messaging Protocol**
+## 🧪 **Testing**
 
-Each chat message includes:
+Manual test notes can be found under:
 
-```json
-{
-  "type": "msg",
-  "seq": N,
-  "iv": "...",
-  "ct": "...",
-  "mac": "...",
-}
+```
+tests/manual/NOTES.md
 ```
 
-Properties:
-
-* AES-128 ciphertext for confidentiality
-* RSA signature for authenticity & integrity
-* Sequence numbers for replay protection
-* Timestamps for freshness
+You may run the server in one terminal and multiple clients in others to simulate messaging between users.
 
 ---
 
-### **Transcript Logging**
+## 🛠️ **Future Improvements**
 
-Both client and server store append-only logs:
-
-```
-transcripts/transcript_client_<session>.log
-transcripts/transcript_server_<session>.log
-```
-
-Each line includes:
-
-* seqno
-* timestamp
-* ciphertext
-* signature
-* peer certificate fingerprint
-
-A SHA-256 transcript hash is computed for non-repudiation.
+* GUI client (Tkinter / Qt).
+* Multi-user broadcast support.
+* Perfect forward secrecy (via ephemeral DH keys).
+* Certificate revocation lists (CRL) and OCSP.
 
 ---
 
-### **Signed Session Receipts**
+## 📄 License
 
-After chat ends, both sides create:
-
-```
-receipt = {
-  "type": "receipt",
-  "my_fp": "...",
-  "peer_fp": "...",
-  "first_seq": ...,
-  "last_seq": ...,
-  "transcript_sha256": "...",
-  "ts": ...,
-  "sig": "..."
-}
-```
-
-Receipts are:
-
-* RSA-signed
-* exchanged
-* verified
-* saved to `client_receipts/` and `server_receipts/`
-
-This ensures **non-repudiation**.
+This project is provided for educational and research purposes.
 
 ---
 
-
-## **9. Conclusion**
-
-The SecureChat system successfully demonstrates:
-
-* Authenticated key exchange
-* AES-encrypted messaging
-* RSA signatures for integrity
-* Replay attack resistance
-* Tamper-evident logging
-* Strong non-repudiation guarantees
-
+If you want this README automatically placed into a file or want a more visually styled version (badges, emoji headers, diagrams, etc.), just tell me!

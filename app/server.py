@@ -21,7 +21,7 @@ from cryptography.hazmat.primitives.asymmetric import padding, utils
 from cryptography.hazmat.primitives import hashes
 
 CA_CERT = os.getenv("CA_CERT", "certs/ca.cert.pem")
-SERVER_CERT = os.getenv("SERVER_CERT", "certs/server.cert.pem")
+SERVER_CERT = os.getenv("SERVER_CERT", "certs/server.cert.bad.pem")
 SERVER_KEY = os.getenv("SERVER_KEY", "certs/server.key.pem")
 SERVER_HOST = os.getenv("SERVER_HOST", "127.0.0.1")
 SERVER_PORT = int(os.getenv("SERVER_PORT", "9000"))
