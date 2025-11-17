@@ -163,5 +163,3 @@ You may run the server in one terminal and multiple clients in others to simulat
 This project is provided for educational and research purposes.
 
 ---
-
-If you want this README automatically placed into a file or want a more visually styled version (badges, emoji headers, diagrams, etc.), just tell me!
