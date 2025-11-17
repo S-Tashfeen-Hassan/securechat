@@ -6,160 +6,221 @@
 
 # **SecureChat – Encrypted Messaging System**
 
-SecureChat is an end-to-end encrypted communication system built using Python.
-It implements modern cryptographic techniques—including **AES**, **Diffie-Hellman key exchange**, and **PKI certificates**—to ensure confidentiality, integrity, and authentication across client–server communication.
+SecureChat is an end-to-end encrypted client–server chat system built in Python.
+It combines **AES symmetric encryption**, **Diffie–Hellman key exchange**, and **PKI-based certificate authentication** to ensure secure message exchange.
 
 ---
 
-## 📌 **Features**
+## 🌐 **GitHub Repository**
 
-### 🔐 End-to-End Encryption
-
-* AES symmetric encryption for message confidentiality.
-* Diffie-Hellman key exchange to derive shared session keys.
-* Public Key Infrastructure (PKI) for certificate-based identity verification.
-
-### 🧾 Secure Message Handling
-
-* Encrypted message transmission between client and server.
-* Structured protocol for sending, receiving, and parsing packets.
-
-### 🗂️ Data Storage
-
-* Local transcript storage for delivered/received messages.
-* SQLite database backend (via `storage/db.py`) for persistent logging.
-
-### 🧰 Modular Architecture
-
-* `crypto/` for all cryptographic primitives.
-* `common/` for protocol and shared utilities.
-* `storage/` for transcripts and database logic.
-* `app/` for server and client implementations.
-
-### 🔏 Certificate Authority Included
-
-* Scripts for generating your own CA and certificates.
-* Pre-generated sample certificates in `certs/`.
+👉 **GitHub Repo:** [https://github.com/yourusername/securechat](https://github.com/yourusername/securechat)
+*(Replace with your actual repository link.)*
 
 ---
 
-## 📁 **Project Structure**
+# 📁 **Project Structure**
 
 ```
-securechat-main/
+securechat/
 │
 ├── app/
-│   ├── client.py          # Client application
-│   ├── server.py          # Server application
-│   ├── helper.py          # Utility functions for networking
+│   ├── client.py
+│   ├── server.py
+│   ├── helper.py
 │   ├── common/
-│   │   ├── protocol.py    # Message protocol definitions
-│   │   └── utils.py       # Common helpers
+│   │   ├── protocol.py
+│   │   └── utils.py
 │   ├── crypto/
-│   │   ├── aes.py         # AES encryption
-│   │   ├── dh.py          # Diffie-Hellman exchange
-│   │   └── pki.py         # PKI certificate handling
+│   │   ├── aes.py
+│   │   ├── dh.py
+│   │   └── pki.py
 │   └── storage/
-│       ├── db.py          # Database for logs/transcripts
-│       └── transcript.py  # Local transcript management
+│       ├── db.py
+│       └── transcript.py
 │
-├── certs/                 # Certificates and keys
-│
-├── scripts/
-│   ├── gen_ca.py          # Generate Certificate Authority
-│   └── gen_cert.py        # Generate server/client certificates
+├── certs/                 # Certificates + private keys
+├── scripts/               # Certificate generation scripts
+│   ├── gen_ca.py
+│   └── gen_cert.py
 │
 ├── tests/
-│   └── manual/            # Manual testing notes
+│   └── manual/
+│       └── NOTES.md
 │
-├── requirements.txt       # Python dependencies
-└── README.md              # (This file)
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🚀 **Getting Started**
+# ⚙️ **Prerequisites**
 
-### **1. Install Dependencies**
+Before running the system, ensure the following:
 
-```
+### **Required Software**
+
+* Python **3.10+**
+* OpenSSL installed (for generating certificates)
+* pip (Python package manager)
+
+### **Install Dependencies**
+
+```bash
 pip install -r requirements.txt
 ```
 
-### **2. Generate Certificates (optional)**
+---
 
-If you want new certificates:
+# 🔧 **Configuration Required**
+
+### **1. Environment Variables**
+
+Create a file named `.env` in the project root:
 
 ```
+SERVER_HOST=127.0.0.1
+SERVER_PORT=5000
+CLIENT_CERT=certs/client.cert.pem
+CLIENT_KEY=certs/client.key.pem
+SERVER_CERT=certs/server.cert.pem
+CA_CERT=certs/ca.cert.pem
+```
+
+*(Modify paths if needed.)*
+
+---
+
+### **2. Certificate Setup**
+
+SecureChat uses PKI authentication.
+You may **use the pre-generated certificates** in the `certs/` folder, or generate new ones.
+
+#### **Generate a Certificate Authority (CA)**
+
+```bash
 python scripts/gen_ca.py
+```
+
+#### **Generate Server Certificate**
+
+```bash
 python scripts/gen_cert.py server
+```
+
+#### **Generate Client Certificate**
+
+```bash
 python scripts/gen_cert.py client
 ```
 
-This will create new private keys and signed certificates under `certs/`.
+This will place signed certificates inside `certs/`.
 
 ---
 
-## ▶️ **Running the Server**
+# ▶️ **How to Run the System**
 
-```
+## **Start the Server**
+
+```bash
 python app/server.py
 ```
 
-Server listens for incoming client connections, performs certificate authentication, negotiates session keys, and manages message routing.
+Expected output:
+
+```
+[SERVER] Listening on 127.0.0.1:5000
+[SERVER] Waiting for client connection...
+```
 
 ---
 
-## 💬 **Running the Client**
+## **Start the Client**
 
-```
+```bash
 python app/client.py
 ```
 
-The client will:
+Expected output:
 
-* Load its certificate.
-* Verify the server certificate.
-* Perform Diffie-Hellman key exchange.
-* Start sending and receiving encrypted messages.
-
----
-
-## 🔒 **Security Overview**
-
-| Component             | Technique                                         |
-| --------------------- | ------------------------------------------------- |
-| Symmetric Encryption  | AES (CBC/CTR depending on implementation)         |
-| Key Exchange          | Diffie-Hellman                                    |
-| Identity Verification | X.509 Certificates (PKI)                          |
-| Message Integrity     | HMAC / AES authenticated mode (depending on code) |
-| Storage Protection    | Local transcripts + optional DB                   |
+```
+[CLIENT] Connecting to server...
+[CLIENT] Certificate verified.
+[CLIENT] Shared session key established.
+You can now send encrypted messages.
+```
 
 ---
 
-## 🧪 **Testing**
+# 💬 **Sample Input/Output**
 
-Manual test notes can be found under:
+### **Client Input**
+
+```
+hello server
+```
+
+### **Client Output**
+
+```
+[ENC SENT] b'\x93\x10\xfa...'
+```
+
+### **Server Output**
+
+```
+[RECEIVED DECRYPTED] hello server
+```
+
+### **Server Replies**
+
+```
+[SERVER] Enter message: hi client!
+```
+
+### **Client Receives**
+
+```
+[DECRYPTED] hi client!
+```
+
+---
+
+# 🔒 **Security Features**
+
+| Feature           | Description                      |
+| ----------------- | -------------------------------- |
+| AES Encryption    | Protects message confidentiality |
+| Diffie–Hellman    | Secure session key negotiation   |
+| PKI Certificates  | Ensures identity authenticity    |
+| Encrypted Storage | Secure transcript saving         |
+| Custom Protocol   | Structured packet handling       |
+
+---
+
+# 🧪 **Testing**
+
+You can test by running:
+
+* **One server**
+* **Multiple clients**
+
+Manual testing notes are available at:
 
 ```
 tests/manual/NOTES.md
 ```
 
-You may run the server in one terminal and multiple clients in others to simulate messaging between users.
+---
+
+# 📌 **Future Improvements**
+
+* GUI-based chat client
+* Group chat and broadcast channels
+* Perfect Forward Secrecy (Ephemeral DH)
+* Certificate Revocation Lists (CRL)
 
 ---
 
-## 🛠️ **Future Improvements**
+# 📄 **License**
 
-* GUI client (Tkinter / Qt).
-* Multi-user broadcast support.
-* Perfect forward secrecy (via ephemeral DH keys).
-* Certificate revocation lists (CRL) and OCSP.
-
----
-
-## 📄 License
-
-This project is provided for educational and research purposes.
-
----
+This project is for educational and secure communication research purposes.
