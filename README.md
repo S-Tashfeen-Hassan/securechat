@@ -13,8 +13,7 @@ It combines **AES symmetric encryption**, **Diffie–Hellman key exchange**, and
 
 ## 🌐 **GitHub Repository**
 
-👉 **GitHub Repo:** [https://github.com/yourusername/securechat](https://github.com/yourusername/securechat)
-*(Replace with your actual repository link.)*
+👉 **GitHub Repo:** [https://github.com/S-Tashfeen-Hassan/securechat](https://github.com/S-Tashfeen-Hassan/securechat)
 
 ---
 
